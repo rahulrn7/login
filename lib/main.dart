@@ -24,30 +24,37 @@ class LogPage extends StatefulWidget {
 }
 
 class _LogPageState extends State<LogPage> {
-  TextEditingController user = TextEditingController();
-  TextEditingController pass = TextEditingController();
+  TextEditingController cust_email = TextEditingController();
+  TextEditingController formstatesignin = TextEditingController();
+  TextEditingController formstatesignup = TextEditingController();
+  TextEditingController cust_pass = TextEditingController();
 
   Future login()async{
-    var url = "https://tables24.000webhostapp.com/Rahul/login1.php";
-    var response = await http.post(url,body:{
-      "cust_email": user.text,
-      "cust_pass": pass.text,
 
-    });
+      var data = {"cust_email" : cust_email.text, "cust_pass" : cust_pass.text};
+      var url = "https://tables24.000webhostapp.com/Rahul/login.php";
+      var response  = await http.post(url, body: data);
+      var responsebody = jsonDecode(response.body);
+      if (responsebody['status'] == "success"){
+        print(responsebody['username']);
 
-    var data = json.decode(response.body);
-    if(data == "success"){
-      Fluttertoast.showToast(
-          msg: "Login Successful",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> welcome()));
-    }else{
+        /*Fluttertoast.showToast(
+            msg: "Login Successful",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> welcome()));*/
+
+      }
+
+
+
+
+    else{
       Fluttertoast.showToast(
           msg: "Incorrect password",
           toastLength: Toast.LENGTH_SHORT,
@@ -126,7 +133,7 @@ class _LogPageState extends State<LogPage> {
                                 border: Border(bottom: BorderSide(color: Colors.grey[200]))
                             ),
                             child: TextField(
-                              controller: user,
+                              controller: cust_email,
                               decoration: InputDecoration(
                                 hintText: "Email",
                                 hintStyle: TextStyle(color: Colors.grey),
@@ -141,7 +148,7 @@ class _LogPageState extends State<LogPage> {
                                 border: Border(bottom: BorderSide(color: Colors.grey[200]))
                             ),
                             child: TextField(
-                              controller: pass,
+                              controller: cust_pass,
                               decoration: InputDecoration(
                                 hintText: "Password",
                                 hintStyle: TextStyle(color: Colors.grey),
