@@ -1,17 +1,20 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:t24/manlog.dart';
 import 'package:t24/welcome.dart';
 import 'signup.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'home.dart';
 
 void main() {
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
     routes: <String, WidgetBuilder>{
-      '/signup': (BuildContext context) => new SignupPage()
+      '/signup': (BuildContext context) => new SignupPage(),
+      '/manlogin': (BuildContext context) => new ManLogPage(),
     },
     home: LogPage(),
   )
@@ -31,32 +34,33 @@ class _LogPageState extends State<LogPage> {
 
   Future login()async{
 
-      var data = {"cust_email" : cust_email.text, "cust_pass" : cust_pass.text};
-      var url = "https://tables24.000webhostapp.com/Rahul/login.php";
-      var response  = await http.post(url, body: data);
-      var responsebody = jsonDecode(response.body);
-      if (responsebody['status'] == "success"){
-        print(responsebody['username']);
+    var data = {"cust_email" : cust_email.text, "cust_pass" : cust_pass.text};
+    var url = "https://tables24.000webhostapp.com/Rahul/login3.php";
+    var response  = await http.post(url, body: data);
+    var responsebody = jsonDecode(response.body);
+    print(responsebody);
+    if (responsebody[0]['status'] == "success"){
+      print(responsebody[0]['cust_name']);
 
-        /*Fluttertoast.showToast(
-            msg: "Login Successful",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0
-        );
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> welcome()));*/
+      Fluttertoast.showToast(
+          msg: "LOGIN SUCCESSFUL",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context)=> HomePage()));
 
-      }
+    }
 
 
 
 
     else{
       Fluttertoast.showToast(
-          msg: "Incorrect password",
+          msg: "INCORRECT USERNAME OR PASSWORD",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -147,7 +151,8 @@ class _LogPageState extends State<LogPage> {
                             decoration: BoxDecoration(
                                 border: Border(bottom: BorderSide(color: Colors.grey[200]))
                             ),
-                            child: TextField(
+                            child: TextFormField(
+                              obscureText: true,
                               controller: cust_pass,
                               decoration: InputDecoration(
                                 hintText: "Password",
@@ -163,8 +168,8 @@ class _LogPageState extends State<LogPage> {
                     ),
 
                     SizedBox(height: 40),
-                    Text("Forgot Password", style: TextStyle(color: Colors.grey),),
-                    SizedBox(height: 30),
+
+
                     Container(
                       height: 50.0,
                       decoration: BoxDecoration(
@@ -211,7 +216,33 @@ class _LogPageState extends State<LogPage> {
                           ),
                         )
                       ],
-                    )
+                    ),
+                    SizedBox(height:10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Manager?',
+                          style: TextStyle(fontFamily: 'Montserrat',fontSize: 15),
+                        ),
+                        SizedBox(width: 5.0),
+                        InkWell(
+                          onTap: () {
+                            Navigator.of(context).pushNamed('/manlogin');
+                          },
+                          child: Text(
+                            'Log In Here',
+                            style: TextStyle(
+                                color: Colors.orange,
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                decoration: TextDecoration.underline),
+                          ),
+                        )
+                      ],
+                    ),
+
 
 
 
